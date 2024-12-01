@@ -1,7 +1,4 @@
-use std::collections::HashSet;
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
+use aoc2024::{read_lines, count_occurrences};
 
 const INPUT: &str = "assets/input";
 
@@ -48,17 +45,6 @@ fn calculate_similarity_score(list_1: &[i32], list_2: &[i32]) -> usize {
     score
 }
 
-fn count_occurrences<T: PartialEq>(list: &[T], eq: T) -> usize {
-    list.iter().filter(|it| **it == eq).count()
-}
-
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
-}
 
 fn extract_lists(file: &str) -> (Vec<i32>, Vec<i32>) {
     let lines = read_lines(file).unwrap();
