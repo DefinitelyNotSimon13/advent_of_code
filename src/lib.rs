@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
@@ -12,4 +13,23 @@ where
 {
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
+}
+
+pub fn print_part_solution<T: Display>(part: i8, support_text: &str, solution: T) {
+    
+    println!("\t{} {}\t {}",
+        AocStyles::part_number().apply_to(format!("Part {}:", part)),
+        support_text,
+        AocStyles::solution().apply_to(solution),
+    );
+}
+
+mod AocStyles {
+    use console::Style;
+    pub fn part_number() -> Style {
+        Style::new().dim()
+    }
+    pub fn solution() -> Style {
+        Style::new().cyan().bold()
+    }
 }
