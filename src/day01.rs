@@ -1,8 +1,9 @@
 use aoc2024::{read_lines, count_occurrences};
+use color_eyre::Result;
 
-const INPUT: &str = "assets/input";
+const INPUT: &str = "assets/input_day01";
 
-fn main() {
+pub fn main() -> Result<()> {
     // println!("Content: {}", file_content);
     let (list_1, list_2) = extract_lists(INPUT);
 
@@ -14,6 +15,7 @@ fn main() {
         "The similiarity score of the lists is: {}",
         similiarity_score
     );
+    Ok(())
 }
 
 fn calculate_list_distance(list_1: &[i32], list_2: &[i32]) -> Option<i32> {
