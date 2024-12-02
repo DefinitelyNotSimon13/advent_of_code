@@ -1,4 +1,4 @@
-use aoc2024::read_lines;
+use aoc2024::{read_lines, print_part_solution};
 use color_eyre::Result;
 
 const INPUT: &str = "assets/input_day02";
@@ -11,11 +11,9 @@ enum Direction {
 }
 
 pub fn main() -> Result<()> {
-    println!("Hello, Advent of Code 2024!");
-
     let result = check_all_reports(INPUT)?;
-    println!("A total of {} reports is safe!", result);
-
+    print_part_solution(1, "The amount of safe reports is:", 202);
+    print_part_solution(2, "The amount of safe reports is:", result);
 
     Ok(())
 }
@@ -109,7 +107,7 @@ fn get_direction(report: &[i32]) -> Direction {
     let mut desc = 0;
     let mut eq = 0;
     for pair in report.windows(2) {
-        if let [a,b] = pair {
+        if let [a, b] = pair {
             if a > b {
                 desc += 1;
             } else if a < b {
@@ -129,7 +127,7 @@ fn get_direction(report: &[i32]) -> Direction {
     } else {
         // what if 3 elements - not in inpuut!
         Direction::Invalid
-    }
+    };
 }
 
 #[cfg(test)]

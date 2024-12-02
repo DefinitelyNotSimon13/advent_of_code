@@ -1,5 +1,6 @@
-use aoc2024::{read_lines, count_occurrences};
+use aoc2024::{count_occurrences, print_part_solution, read_lines};
 use color_eyre::Result;
+use console::Style;
 
 const INPUT: &str = "assets/input_day01";
 
@@ -8,12 +9,13 @@ pub fn main() -> Result<()> {
     let (list_1, list_2) = extract_lists(INPUT);
 
     let distance = calculate_list_distance(&list_1, &list_2).unwrap();
-    println!("The distance between the lists is: {}", distance);
+    print_part_solution(1, "The distance between the lists is:", distance);
 
     let similiarity_score = calculate_similarity_score(&list_1, &list_2);
-    println!(
-        "The similiarity score of the lists is: {}",
-        similiarity_score
+    print_part_solution(
+        2,
+        "The similiarity score of the lists is:",
+        similiarity_score,
     );
     Ok(())
 }
@@ -46,7 +48,6 @@ fn calculate_similarity_score(list_1: &[i32], list_2: &[i32]) -> usize {
 
     score
 }
-
 
 fn extract_lists(file: &str) -> (Vec<i32>, Vec<i32>) {
     let lines = read_lines(file).unwrap();

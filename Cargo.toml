@@ -7,6 +7,7 @@ default-run = "aoc2024"
 [dependencies]
 clap = { version = "4.5.21", features = ["derive"] }
 color-eyre = "0.6.3"
+console = "0.15.8"
 
 [[bin]]
 name = "day01"
