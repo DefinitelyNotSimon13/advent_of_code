@@ -16,8 +16,8 @@ where
 }
 
 pub fn print_part_solution<T: Display>(part: i8, support_text: &str, solution: T) {
-    
-    println!("\t{} {}\t {}",
+    println!(
+        "\t{} {}\t {}",
         AocStyles::part_number().apply_to(format!("Part {}:", part)),
         support_text,
         AocStyles::solution().apply_to(solution),
