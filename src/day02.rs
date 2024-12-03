@@ -1,4 +1,4 @@
-use aoc2024::{read_lines, print_part_solution};
+use aoc2024::{print_part_solution, read_lines};
 use color_eyre::Result;
 
 const INPUT: &str = "assets/input_day02";
