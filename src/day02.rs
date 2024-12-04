@@ -1,4 +1,4 @@
-use aoc2024::{print_part_solution, read_lines};
+use aoc2024::{print_part_solution, read_lines, print_day_title};
 use color_eyre::Result;
 
 const INPUT: &str = "assets/input_day02";
@@ -11,6 +11,7 @@ enum Direction {
 }
 
 pub fn main() -> Result<()> {
+    print_day_title(2);
     let result = check_all_reports(INPUT)?;
     print_part_solution(1, "The amount of safe reports is:", 202);
     print_part_solution(2, "The amount of safe reports is:", result);

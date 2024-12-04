@@ -1,11 +1,12 @@
-use aoc2024::{count_occurrences, print_part_solution, read_lines};
+use aoc2024::{count_occurrences, print_part_solution, read_lines, print_day_title};
 use color_eyre::Result;
 use console::Style;
 
 const INPUT: &str = "assets/input_day01";
 
 pub fn main() -> Result<()> {
-    // println!("Content: {}", file_content);
+    print_day_title(1);
+
     let (list_1, list_2) = extract_lists(INPUT);
 
     let distance = calculate_list_distance(&list_1, &list_2).unwrap();

@@ -1,4 +1,5 @@
-use aoc2024::read_lines;
+use aoc2024::{print_part_solution, read_lines, print_day_title};
+
 use color_eyre::Result;
 use std::io::Write;
 use std::iter::Peekable;
@@ -24,15 +25,11 @@ enum Keyword {
 const TEST_INPUT: &str = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
 const INPUT: &str = "assets/input_day03";
 
-fn main() -> Result<()> {
-    // let mut tokenizer = Tokenizer::new(TEST_INPUT);
-    // tokenizer.tokenize();
-    // tokenizer.sanitize_unknown_tokens();
-    // let mut nice = Nice::new(tokenizer.read_tokens);
-    // nice.parse();
-
+pub fn main() -> Result<()> {
+    print_day_title(3);
+    print_part_solution(1, "The solution has been lost", "--");
     let sum = calculate_input(INPUT)?;
-    println!("Sum of operations: {}", sum);
+    print_part_solution(2, "Sum of operations:", sum);
 
     Ok(())
 }
@@ -44,16 +41,6 @@ fn calculate_input(file: &str) -> Result<i32> {
 
     let mut tokenizer = Tokenizer::new(&input);
     tokenizer.tokenize();
-
-    let mut file_1 = std::fs::OpenOptions::new()
-        .write(true)
-        .append(true)
-        .open("tokens.tmp")
-        .unwrap();
-
-    write!(file_1, "{:#?}", tokenizer.read_tokens).unwrap();
-    println!("Tokens: {:#?}", &tokenizer.read_tokens[29..35]);
-    // panic!("Yay");
 
     let mut nice = Nice::new(tokenizer.read_tokens.clone());
     nice.parse();
@@ -142,18 +129,10 @@ impl Nice {
         for (i, token) in self.tokens.clone().into_iter().enumerate() {
             if let Some(operation) = self.current_operation.as_ref() {
                 if operation.num_1 == Some(8) && operation.num_2 == Some(5) {
-                    println!("Tokens: {:#?}", &self.tokens[29..35]);
-                    println!("Index of 5: {}", i);
                     panic!("I am evil");
                 }
             }
             let cur_token = token.clone();
-            println!("------------------------");
-            println!(
-                "Reading token: {:#?} - Last Token: {:#?}",
-                token, self.last_token
-            );
-            println!("Current Operation: {:#?}", self.current_operation);
             if self.current_operation.is_none() {
                 match token {
                     Token::Keyword(keyword) => {
@@ -219,12 +198,14 @@ impl Nice {
 
     fn parse_block_close(&mut self) {
         if let Some(operation) = self.current_operation.take() {
-                match operation.op_type {
-                    Keyword::Multiply if self.do_mode && operation.is_valid_mul() => self.operations.push(operation),
-                    Keyword::Do => self.do_mode = true,
-                    Keyword::Dont => self.do_mode = false,
-                    _ => self.current_operation = None,
+            match operation.op_type {
+                Keyword::Multiply if self.do_mode && operation.is_valid_mul() => {
+                    self.operations.push(operation)
                 }
+                Keyword::Do => self.do_mode = true,
+                Keyword::Dont => self.do_mode = false,
+                _ => self.current_operation = None,
+            }
         }
     }
 
@@ -264,7 +245,6 @@ struct Tokenizer<'a> {
 
 impl Tokenizer<'_> {
     fn new<'a>(phrase: &'a str) -> Tokenizer<'a> {
-        println!("Creating new tokenizer with {}", phrase);
         Tokenizer {
             phrase: phrase.chars().peekable(),
             read_tokens: Vec::default(),

@@ -18,18 +18,34 @@ where
 pub fn print_part_solution<T: Display>(part: i8, support_text: &str, solution: T) {
     println!(
         "\t{} {}\t {}",
-        AocStyles::part_number().apply_to(format!("Part {}:", part)),
+        aoc_styles::part_number().apply_to(format!("Part {}:", part)),
         support_text,
-        AocStyles::solution().apply_to(solution),
+        aoc_styles::solution().apply_to(solution),
     );
 }
 
-mod AocStyles {
+pub fn print_day_title(day: i8) {
+    println!(
+        "{} {} {}...",
+        aoc_styles::day_prefix().apply_to("Running"),
+        aoc_styles::day().apply_to("Day"),
+        aoc_styles::day().apply_to(day)
+    );
+    println!("");
+}
+
+mod aoc_styles {
     use console::Style;
     pub fn part_number() -> Style {
         Style::new().dim()
     }
     pub fn solution() -> Style {
         Style::new().cyan().bold()
+    }
+    pub fn day() -> Style {
+        Style::new().green().bold()
+    }
+    pub fn day_prefix() -> Style {
+        Style::new().bold()
     }
 }
