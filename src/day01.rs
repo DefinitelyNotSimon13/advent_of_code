@@ -1,6 +1,5 @@
-use aoc2024::{count_occurrences, print_part_solution, read_lines, print_day_title};
+use aoc2024::{count_occurrences, print_day_title, print_part_solution, read_lines};
 use color_eyre::Result;
-use console::Style;
 
 const INPUT: &str = "assets/input_day01";
 
@@ -116,7 +115,7 @@ mod tests {
 
         for line in read_lines(INPUT).unwrap().flatten() {
             by_line.push_str(&line);
-            by_line.push_str("\n");
+            by_line.push('\n');
         }
 
         assert_eq!(file_content, by_line);

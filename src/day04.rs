@@ -1,13 +1,13 @@
-use aoc2024::{print_part_solution, read_lines, print_day_title};
+use aoc2024::{print_day_title, print_part_solution, read_lines};
 use color_eyre::Result;
-use std::collections::HashMap;
 use std::marker::PhantomData;
 
+#[allow(dead_code)]
 const TEST_INPUT: &str = "assets/test_input_day04";
 const INPUT: &str = "assets/input_day04";
 
-struct Part_1;
-struct Part_2;
+struct Part1;
+struct Part2;
 
 #[derive(Debug)]
 struct Input<Part> {
@@ -19,17 +19,17 @@ struct Input<Part> {
 pub fn main() -> Result<()> {
     print_day_title(4);
 
-    let matches = Input::<Part_1>::default().from_file(INPUT, 1)?.parse()?;
+    let matches = Input::<Part1>::default().read_file(INPUT)?.parse()?;
     print_part_solution(1, "Total of matches:", matches);
 
-    let matches = Input::<Part_2>::default().from_file(INPUT, 1)?.parse()?;
+    let matches = Input::<Part2>::default().read_file(INPUT)?.parse()?;
     print_part_solution(2, "Total of matches:", matches);
 
     Ok(())
 }
 
 impl<Part> Input<Part> {
-    fn from_file(mut self, file: &str, part: i8) -> Result<Self> {
+    fn read_file(mut self, file: &str) -> Result<Self> {
         let lines = read_lines(file)?;
 
         lines.map_while(Result::ok).for_each(|line| {
@@ -57,7 +57,7 @@ impl<Part> Input<Part> {
                     continue;
                 }
 
-                matches += action(&self, (x, y))?;
+                matches += action(self, (x, y))?;
             }
         }
 
@@ -70,14 +70,12 @@ impl<Part> Input<Part> {
     }
 }
 
-impl Input<Part_1> {
+impl Input<Part1> {
     fn parse(&self) -> Result<i32> {
         self.loop_through_input(|char| char != 'X', Self::check_at_x)
     }
 
     fn check_at_x(&self, position: (usize, usize)) -> Result<i32> {
-        let (x, y) = position;
-
         let directions = [
             (1, 0),   // forward: x++
             (-1, 0),  // backward: x--
@@ -130,7 +128,7 @@ impl Input<Part_1> {
     }
 }
 
-impl Input<Part_2> {
+impl Input<Part2> {
     fn parse(&self) -> Result<i32> {
         self.loop_through_input(|char| char != 'M' && char != 'S', Self::check_at_m)
     }
@@ -141,7 +139,6 @@ impl Input<Part_2> {
         //  ------- | (x+1, y+1) | ---------- |
         // (x, y+2) | ---------- | (x+2, y+2) |
         let (x, y) = position;
-        let mut matches = true;
 
         let top_left: char = match self.get_at_position((x, y)) {
             Some(char) => char,
@@ -198,7 +195,7 @@ impl Input<Part_2> {
     }
 }
 
-impl Default for Input<Part_1> {
+impl Default for Input<Part1> {
     fn default() -> Self {
         Input {
             data: vec![],
@@ -208,7 +205,7 @@ impl Default for Input<Part_1> {
     }
 }
 
-impl Default for Input<Part_2> {
+impl Default for Input<Part2> {
     fn default() -> Self {
         Input {
             data: vec![],

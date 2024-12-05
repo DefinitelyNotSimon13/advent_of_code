@@ -1,7 +1,6 @@
 use color_eyre::Result;
 
 use clap::{Parser, Subcommand};
-use console::Style;
 
 mod day01;
 mod day02;
@@ -36,7 +35,6 @@ struct Cli {
     command: Commands,
 }
 
-
 #[derive(Subcommand)]
 enum Commands {
     Day {
@@ -52,44 +50,41 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match &cli.command {
-        Commands::Day { day, all } => {
-            match day {
-                Some(1) => DAYS[0](),
-                Some(2) => DAYS[1](),
-                Some(3) => DAYS[2](),
-                Some(4) => DAYS[3](),
-                Some(5) => DAYS[4](),
-                Some(6) => DAYS[5](),
-                Some(7) => DAYS[6](),
-                Some(8) => DAYS[7](),
-                Some(9) => DAYS[8](),
-                Some(10) => DAYS[9](),
-                Some(11) => DAYS[10](),
-                Some(12) => DAYS[11](),
-                Some(13) => DAYS[12](),
-                Some(14) => DAYS[13](),
-                Some(15) => DAYS[14](),
-                Some(16) => DAYS[15](),
-                Some(17) => DAYS[16](),
-                Some(18) => DAYS[17](),
-                Some(19) => DAYS[18](),
-                Some(20) => DAYS[19](),
-                Some(21) => DAYS[20](),
-                Some(22) => DAYS[21](),
-                Some(23) => DAYS[22](),
-                Some(24) => DAYS[23](),
-                Some(25) => DAYS[24](),
-                None => {
-                    for exec in DAYS {
-                        exec()?;
-                        println!("")
-                    }
-                    Ok(())
+        Commands::Day { day, .. } => match day {
+            Some(1) => DAYS[0](),
+            Some(2) => DAYS[1](),
+            Some(3) => DAYS[2](),
+            Some(4) => DAYS[3](),
+            Some(5) => DAYS[4](),
+            Some(6) => DAYS[5](),
+            Some(7) => DAYS[6](),
+            Some(8) => DAYS[7](),
+            Some(9) => DAYS[8](),
+            Some(10) => DAYS[9](),
+            Some(11) => DAYS[10](),
+            Some(12) => DAYS[11](),
+            Some(13) => DAYS[12](),
+            Some(14) => DAYS[13](),
+            Some(15) => DAYS[14](),
+            Some(16) => DAYS[15](),
+            Some(17) => DAYS[16](),
+            Some(18) => DAYS[17](),
+            Some(19) => DAYS[18](),
+            Some(20) => DAYS[19](),
+            Some(21) => DAYS[20](),
+            Some(22) => DAYS[21](),
+            Some(23) => DAYS[22](),
+            Some(24) => DAYS[23](),
+            Some(25) => DAYS[24](),
+            None => {
+                for exec in DAYS {
+                    exec()?;
+                    println!()
                 }
-                _ => panic!("You're evil"),
+                Ok(())
             }
-        }
-        _ => todo!(),
+            _ => panic!("You're evil"),
+        },
     }
 }
 

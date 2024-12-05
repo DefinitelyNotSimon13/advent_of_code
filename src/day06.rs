@@ -1,4 +1,4 @@
-use aoc2024::{print_part_solution, read_lines, print_day_title};
+use aoc2024::{print_day_title, print_part_solution};
 use color_eyre::Result;
 
 pub fn main() -> Result<()> {

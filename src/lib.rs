@@ -31,7 +31,7 @@ pub fn print_day_title(day: i8) {
         aoc_styles::day().apply_to("Day"),
         aoc_styles::day().apply_to(day)
     );
-    println!("");
+    println!();
 }
 
 mod aoc_styles {

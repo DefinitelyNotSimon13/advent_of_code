@@ -1,9 +1,11 @@
-use aoc2024::{print_part_solution, read_lines, print_day_title};
+use aoc2024::{print_day_title, print_part_solution};
 
 use color_eyre::Result;
-use std::io::Write;
 use std::iter::Peekable;
-use std::str::Chars;
+
+#[allow(dead_code)]
+const TEST_INPUT: &str = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
+const INPUT: &str = "assets/input_day03";
 
 #[derive(PartialEq, Debug, Clone)]
 enum Token {
@@ -22,8 +24,6 @@ enum Keyword {
     Dont,
 }
 
-const TEST_INPUT: &str = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
-const INPUT: &str = "assets/input_day03";
 
 pub fn main() -> Result<()> {
     print_day_title(3);
@@ -35,14 +35,13 @@ pub fn main() -> Result<()> {
 }
 
 fn calculate_input(file: &str) -> Result<i32> {
-    let lines = read_lines(file)?;
     let mut sum = 0;
     let input: String = std::fs::read_to_string(file)?;
 
     let mut tokenizer = Tokenizer::new(&input);
     tokenizer.tokenize();
 
-    let mut nice = Nice::new(tokenizer.read_tokens.clone());
+    let mut nice = Parser::new(tokenizer.read_tokens.clone());
     nice.parse();
 
     sum += calculate_operations(nice.operations).unwrap();
@@ -103,7 +102,7 @@ impl Operation {
 }
 
 #[derive(Debug)]
-struct Nice {
+struct Parser {
     tokens: Vec<Token>,
     last_token: Token,
     current_operation: Option<Operation>,
@@ -111,8 +110,8 @@ struct Nice {
     do_mode: bool,
 }
 
-impl Nice {
-    fn new(tokens: Vec<Token>) -> Nice {
+impl Parser {
+    fn new(tokens: Vec<Token>) -> Parser {
         Self {
             tokens,
             last_token: Token::Unknown,
@@ -126,7 +125,7 @@ impl Nice {
         // valid block:
         // Keyword(Multiply),BlockOpen,NumLiteral,Seperator,
         // NumLiteral,BlockClose
-        for (i, token) in self.tokens.clone().into_iter().enumerate() {
+        for token in self.tokens.clone().into_iter() {
             if let Some(operation) = self.current_operation.as_ref() {
                 if operation.num_1 == Some(8) && operation.num_2 == Some(5) {
                     panic!("I am evil");
@@ -134,11 +133,8 @@ impl Nice {
             }
             let cur_token = token.clone();
             if self.current_operation.is_none() {
-                match token {
-                    Token::Keyword(keyword) => {
-                        self.current_operation = Some(Operation::new(keyword))
-                    }
-                    _ => (),
+                if let Token::Keyword(keyword) = token {
+                    self.current_operation = Some(Operation::new(keyword))
                 }
                 self.last_token = cur_token;
                 continue;
@@ -154,25 +150,6 @@ impl Nice {
             self.last_token = cur_token;
             // println!("Reading complete:");
             // println!("Current Operation: {:#?}", self.current_operation);
-        }
-    }
-
-    fn current_op_type(&self) -> Option<Keyword> {
-        self.current_operation.as_ref().map(|op| op.op_type.clone())
-    }
-
-    fn current_op_valid(&self) -> bool {
-        match self.current_op_type() {
-            Some(Keyword::Multiply) => {
-                matches!(self.last_token, Token::NumLiteral(_))
-                    && self
-                        .current_operation
-                        .as_ref()
-                        .map(|op| op.is_valid_mul())
-                        .unwrap_or(false)
-            }
-            Some(Keyword::Do) | Some(Keyword::Dont) => self.last_token == Token::BlockOpen,
-            None => false,
         }
     }
 
@@ -244,7 +221,7 @@ struct Tokenizer<'a> {
 }
 
 impl Tokenizer<'_> {
-    fn new<'a>(phrase: &'a str) -> Tokenizer<'a> {
+    fn new(phrase: &str) -> Tokenizer<'_> {
         Tokenizer {
             phrase: phrase.chars().peekable(),
             read_tokens: Vec::default(),
@@ -290,10 +267,6 @@ impl Tokenizer<'_> {
                 },
             });
         }
-    }
-
-    fn sanitize_unknown_tokens(&mut self) {
-        self.read_tokens.retain(|token| *token != Token::Unknown);
     }
 
     fn match_keyword(&self, first_char: char) -> Option<Keyword> {

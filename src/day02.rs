@@ -1,4 +1,4 @@
-use aoc2024::{print_part_solution, read_lines, print_day_title};
+use aoc2024::{print_day_title, print_part_solution, read_lines};
 use color_eyre::Result;
 
 const INPUT: &str = "assets/input_day02";
@@ -79,11 +79,11 @@ fn check_report(report: &[i32], elements_removed: i8) -> bool {
         }
     }
 
-    return if let Some(bad_transition) = bad_transition {
+    if let Some(bad_transition) = bad_transition {
         check_without_bad_transition(report, bad_transition)
     } else {
         true
-    };
+    }
 }
 
 fn check_without_bad_transition(report: &[i32], index: (usize, usize)) -> bool {
@@ -109,17 +109,15 @@ fn get_direction(report: &[i32]) -> Direction {
     let mut eq = 0;
     for pair in report.windows(2) {
         if let [a, b] = pair {
-            if a > b {
-                desc += 1;
-            } else if a < b {
-                asc += 1;
-            } else if a == b {
-                eq += 1;
+            match a.cmp(b) {
+                std::cmp::Ordering::Greater => desc += 1,
+                std::cmp::Ordering::Less => asc += 1,
+                std::cmp::Ordering::Equal => eq += 1,
             }
         }
     }
 
-    return if eq > 1 || asc > 1 && desc > 1 {
+    if eq > 1 || asc > 1 && desc > 1 {
         Direction::Invalid
     } else if asc > desc {
         Direction::Increasing
@@ -128,7 +126,7 @@ fn get_direction(report: &[i32]) -> Direction {
     } else {
         // what if 3 elements - not in inpuut!
         Direction::Invalid
-    };
+    }
 }
 
 #[cfg(test)]
@@ -157,83 +155,83 @@ mod test {
     #[test]
     fn test_1() {
         let list = [1, 2, 3, 4, 5];
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_2() {
         let list = [1, 1, 3, 4, 5];
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_3() {
         let list = [1, 1, 1, 4, 5];
-        assert_eq!(check_report(&list, 0), false);
+        assert!(!check_report(&list, 0));
     }
 
     #[test]
     fn test_4() {
         let list = [1, 2, 2, 4, 5];
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_5() {
         let list = [1, 2, 2, 4, 3];
-        assert_eq!(check_report(&list, 0), false);
+        assert!(!check_report(&list, 0));
     }
 
     #[test]
     fn test_6() {
         let list = []; // No levels
-        assert_eq!(check_report(&list, 0), false);
+        assert!(!check_report(&list, 0));
     }
 
     #[test]
     fn test_7() {
         let list = [1]; // Single level
-        assert_eq!(check_report(&list, 0), false);
+        assert!(!check_report(&list, 0));
     }
 
     #[test]
     fn test_8() {
         let list = [1, 2, 2, 3]; // Removing either "2" could make it safe
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_9() {
         let list = [1, 5, 6, 9]; // Invalid due to 1 -> 5
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_10() {
         let list = [1, 2, 3, 2, 5]; // Removing "3" or "2" might make it safe
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_11() {
         let list = [9, 8, 6, 6, 5]; // Removing one "6" might make it safe
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_12() {
         let list = [1, 3, 2, 4, 5]; // Removing "2" might make it safe
-        assert_eq!(check_report(&list, 0), true);
+        assert!(check_report(&list, 0));
     }
 
     #[test]
     fn test_report() {
-        assert_eq!(check_report(&LIST_1, 0), true);
-        assert_eq!(check_report(&LIST_2, 0), false);
-        assert_eq!(check_report(&LIST_3, 0), false);
-        assert_eq!(check_report(&LIST_4, 0), true);
-        assert_eq!(check_report(&LIST_5, 0), true);
-        assert_eq!(check_report(&LIST_6, 0), true);
+        assert!(check_report(&LIST_1, 0));
+        assert!(!check_report(&LIST_2, 0));
+        assert!(!check_report(&LIST_3, 0));
+        assert!(check_report(&LIST_4, 0));
+        assert!(check_report(&LIST_5, 0));
+        assert!(check_report(&LIST_6, 0));
     }
 
     #[test]
