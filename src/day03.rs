@@ -24,7 +24,6 @@ enum Keyword {
     Dont,
 }
 
-
 pub fn main() -> Result<()> {
     print_day_title(3);
     print_part_solution(1, "The solution has been lost", "--");
